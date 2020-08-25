@@ -17,8 +17,9 @@ class Company(models.Model):
 class Problems(models.Model):
         company=models.ForeignKey("Company",on_delete=models.CASCADE)
         problem=models.TextField(max_length=400)
-        image=models.URLField()
-        video=models.URLField()
+        image=models.ImageField(upload_to='images/', blank=True, null=True, editable=True)
+        video=models.URLField( max_length=200)
+        uploaded_date=models.DateField('date_added',auto_now_add=True,blank=True)
 
         class Meta:
                 ordering=['problem']
@@ -56,7 +57,7 @@ class Sol_progress(models.Model):
         sol=models.ForeignKey("Solution",on_delete=models.CASCADE)
         progress=models.IntegerField()
         progress_details=models.TextField()
-        image=models.URLField
+        image=models.ImageField(upload_to='images/', blank=True, null=True, editable=True)
         video=models.URLField()
 
         def __str__(self):
