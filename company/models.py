@@ -1,5 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.exceptions import ValidationError
+
+def validate_image(fieldfile_obj):
+    filesize = fieldfile_obj.file.size
+    megabyte_limit = 2.0
+    if filesize > megabyte_limit*1024*1024:
+        raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+
 
 class User(AbstractUser):
          pass
@@ -17,7 +25,7 @@ class Company(models.Model):
 class Problems(models.Model):
         company=models.ForeignKey("Company",on_delete=models.CASCADE)
         problem=models.TextField(max_length=400)
-        image=models.ImageField(upload_to='images/', blank=True, null=True, editable=True)
+        image=models.ImageField(upload_to='images/',validators=[validate_image], blank=True, null=True, editable=True)
         video=models.URLField( max_length=200)
         uploaded_date=models.DateField('date_added',auto_now_add=True,blank=True)
 
@@ -57,7 +65,7 @@ class Sol_progress(models.Model):
         sol=models.ForeignKey("Solution",on_delete=models.CASCADE)
         progress=models.IntegerField()
         progress_details=models.TextField()
-        image=models.ImageField(upload_to='images/', blank=True, null=True, editable=True)
+        image=models.ImageField(upload_to='images/',validators=[validate_image], blank=True, null=True, editable=True)
         video=models.URLField()
 
         def __str__(self):
