@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 
 def validate_image(fieldfile_obj):
     filesize = fieldfile_obj.file.size
@@ -25,7 +26,7 @@ class Company(models.Model):
 class Problems(models.Model):
         company=models.ForeignKey("Company",on_delete=models.CASCADE)
         problem=models.TextField(max_length=400)
-        image=models.ImageField(upload_to='images/',validators=[validate_image], blank=True, null=True, editable=True)
+        image=models.FileField(upload_to='images/',validators=[validate_image,FileExtensionValidator(allowed_extensions=['jpeg','jpg','pdf'])], blank=True, null=True, editable=True)
         video=models.URLField( max_length=200)
         uploaded_date=models.DateField('date_added',auto_now_add=True,blank=True)
 
@@ -42,7 +43,7 @@ class Student(models.Model):
         state=models.CharField(max_length=20)
         district=models.CharField(max_length=20)
         Address=models.TextField(max_length=300)
-        problems=models.ManyToManyField(Problems)
+        problems=models.ForeignKey("Problems", on_delete=models.CASCADE,blank=True,null=True)
 
         class Meta:
                 ordering=['Name']
@@ -65,7 +66,7 @@ class Sol_progress(models.Model):
         sol=models.ForeignKey("Solution",on_delete=models.CASCADE)
         progress=models.IntegerField()
         progress_details=models.TextField()
-        image=models.ImageField(upload_to='images/',validators=[validate_image], blank=True, null=True, editable=True)
+        image=models.FileField(upload_to='images/',validators=[validate_image,FileExtensionValidator(allowed_extensions=['jpeg','jpg','pdf'])], blank=True, null=True, editable=True)
         video=models.URLField()
 
         def __str__(self):

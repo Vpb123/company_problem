@@ -3,7 +3,10 @@ from django.contrib import admin
 # Register your models here.
 from .models import User,Company,Problems,Student,Solution,Sol_progress
 
-admin.site.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display=['username','email']
+
+admin.site.register(User,UserAdmin)
 class CompanyAdmin(admin.ModelAdmin):
 
     list_display=['C_name','Owner','C_type']
